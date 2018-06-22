@@ -48,8 +48,16 @@ def get_username():
     return username
 
 
+def operation(function):
+    """Decorator for spotipy functions that don't need a token"""
+    def wrapper(*args, **kwargs):
+        sp = spotipy.Spotify(auth=token)
+        return function(sp, *args, **kwargs)
+    return wrapper
+
+
 def authorized_operation(scope):
-    """Decorator for functions that need a token"""
+    """Decorator for spotipy functions that need a token"""
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):
             token = util.prompt_for_user_token(username, scope)
