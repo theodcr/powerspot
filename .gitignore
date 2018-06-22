@@ -5,3 +5,4 @@ __pycache__/
 *.wiki
 *.json
 data/
+export/

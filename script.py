@@ -10,6 +10,8 @@ import spotipy.util as util
 
 
 INTERVAL = datetime.timedelta(weeks=4)
+datapath = lambda path: "data/" + path
+exportpath = lambda path: "export/" + path
 
 
 def parse_release_date(date):
@@ -128,8 +130,9 @@ def main():
     #artists = get_followed_artists(username)
     #new_releases = get_new_releases(username, artists)
     #write_json(artists, "artists.json")
-    new_releases = read_json("new_releases.json")
-    write_file(parse_albums(new_releases), "new_releases.wiki")
+    new_releases = read_json(datapath("new_releases.json"))
+    write_file(parse_albums(new_releases),
+               exportpath("new_releases.wiki"))
 
 
 if __name__ == '__main__':
