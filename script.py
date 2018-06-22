@@ -51,7 +51,7 @@ def get_username():
 def operation(function):
     """Decorator for spotipy functions that don't need a token"""
     def wrapper(*args, **kwargs):
-        sp = spotipy.Spotify()
+        sp = spotipy.Spotify(auth=token)
         return function(sp, *args, **kwargs)
     return wrapper
 
@@ -69,6 +69,12 @@ def authorized_operation(scope):
                 return None
         return wrapper
     return real_decorator
+
+
+@operation()
+def get_album(sp, album_id):
+    """Returns an album given its ID or URI"""
+    return sp.album(album_id)
 
 
 @authorized_operation('user-follow-read')
