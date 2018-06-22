@@ -46,6 +46,15 @@ def get_username():
     """Gets or prompts the user for the username"""
     username = os.getenv('SPOTIFY_USER')
     if username is None:
+        # find the username in the cache
+        for filename in os.listdir('.'):
+            if filename[:6] == '.cache':
+                is_username = raw_input(
+                    "Use cached username '{}'? (y) ".format(filename[7:]))
+                if is_username == 'y':
+                    username = filename[7:]
+                    break
+    if username is None:
         username = raw_input("Please enter your username: ")
     return username
 
@@ -73,7 +82,7 @@ def authorized_operation(scope):
     return real_decorator
 
 
-@operation()
+@operation
 def get_album(sp, album_id):
     """Returns an album given its ID or URI"""
     return sp.album(album_id)
@@ -130,9 +139,9 @@ def main():
     #artists = get_followed_artists(username)
     #new_releases = get_new_releases(username, artists)
     #write_json(artists, "artists.json")
-    new_releases = read_json(datapath("new_releases.json"))
-    write_file(parse_albums(new_releases),
-               exportpath("new_releases.wiki"))
+    #new_releases = read_json(datapath("new_releases.json"))
+    #write_file(parse_albums(new_releases),
+    #           exportpath("new_releases.wiki"))
 
 
 if __name__ == '__main__':
