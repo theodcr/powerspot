@@ -4,7 +4,6 @@ import datetime
 import json
 import os
 import pprint
-import sys
 import spotipy
 import spotipy.util as util
 
@@ -67,7 +66,7 @@ def operation(function):
     return wrapper
 
 
-def authorized_operation(scope):
+def authenticated_operation(scope):
     """Decorator for spotipy functions that need a token"""
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):
@@ -88,7 +87,7 @@ def get_album(sp, album_id):
     return sp.album(album_id)
 
 
-@authorized_operation('user-follow-read')
+@authenticated_operation('user-follow-read')
 def get_followed_artists(sp):
     """Returns the full list of followed artists"""
     artists = []
@@ -101,7 +100,7 @@ def get_followed_artists(sp):
     return artists
 
 
-@authorized_operation('user-follow-read')
+@authenticated_operation('user-follow-read')
 def get_new_releases(sp, artists, interval=INTERVAL):
     """Returns a list of recently released albums"""
     new_releases = []
@@ -115,7 +114,7 @@ def get_new_releases(sp, artists, interval=INTERVAL):
     return new_releases
 
 
-@authorized_operation('user-library-modify')
+@authenticated_operation('user-library-modify')
 def save_albums(sp, albums):
     """Saves the albums in the user library"""
     ids = [album['id'] for album in albums]
