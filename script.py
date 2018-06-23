@@ -62,7 +62,7 @@ def get_username():
 def operation(function):
     """Decorator for spotipy functions that don't need a token"""
     def wrapper(*args, **kwargs):
-        sp = spotipy.Spotify(auth=token)
+        sp = spotipy.Spotify()
         return function(sp, *args, **kwargs)
     return wrapper
 
