@@ -1,4 +1,5 @@
-# coding: utf-8
+#!/usr/bin/env python3
+"""Collection of functions to enhance the Spotify experience"""
 
 import datetime
 import json
@@ -49,7 +50,7 @@ def get_username():
         for filename in os.listdir('.'):
             if filename[:6] == '.cache':
                 is_username = raw_input(
-                    "Use cached username '{}'? (y) ".format(filename[7:]))
+                    f"Use cached username '{filename[7:]}'? (y) ")
                 if is_username == 'y':
                     username = filename[7:]
                     break
@@ -129,7 +130,7 @@ def parse_albums(albums_json):
     artists = (album['artists'][0]['name'] for album in albums_json)
     dates = (album['release_date'] for album in albums_json)
     for artist, album, date in zip(artists, albums, dates):
-        output += "- {} - {} - {}\n".format(artist, album, date)
+        output += f"- {artist} - {album} - {date}\n"
     return output
 
 
@@ -137,10 +138,11 @@ def main():
     username = get_username()
     #artists = get_followed_artists(username)
     #new_releases = get_new_releases(username, artists)
-    #write_json(artists, "artists.json")
+    #write_json(artists, datapath("artists.json"))
     #new_releases = read_json(datapath("new_releases.json"))
     #write_file(parse_albums(new_releases),
     #           exportpath("new_releases.wiki"))
+    return username
 
 
 if __name__ == '__main__':
