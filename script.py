@@ -12,6 +12,7 @@ import spotipy.util as util
 INTERVAL = datetime.timedelta(weeks=4)
 datapath = lambda path: "data/" + path
 exportpath = lambda path: "export/" + path
+date_format = '%Y-%m-%d'
 
 
 def parse_release_date(date):
@@ -123,9 +124,12 @@ def save_albums(sp, albums):
     return results
 
 
-def parse_albums(albums_json):
-    """Parses albums from JSON format to a readable list"""
+def parse_albums(albums_json, write_date=True):
+    """Parses albums from JSON format to a readable list
+    Optionally write the current date"""
     output = ""
+    if write_date:
+        output += "%date {datetime.datetime.now().strftime(date_format)}"
     albums = (album['name'] for album in albums_json)
     artists = (album['artists'][0]['name'] for album in albums_json)
     dates = (album['release_date'] for album in albums_json)
@@ -134,11 +138,26 @@ def parse_albums(albums_json):
     return output
 
 
+def read_date(filename):
+    """Reads and returns the date metadata contained in the file
+    Returns None if date could not be found or read"""
+    with open(filename, 'r') as file_content:
+        while True:
+            words = file_content.readline().split()
+            if words[0][1:] == 'date':
+                date_str = words[1]
+                break
+    date = None
+    try:
+        date = datetime.datetime.strptime(date, date_format)
+    return date
+
+
 def main():
     username = get_username()
     #artists = get_followed_artists(username)
-    #new_releases = get_new_releases(username, artists)
     #write_json(artists, datapath("artists.json"))
+    #new_releases = get_new_releases(username, artists)
     #new_releases = read_json(datapath("new_releases.json"))
     #write_file(parse_albums(new_releases),
     #           exportpath("new_releases.wiki"))
