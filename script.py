@@ -150,7 +150,7 @@ def read_date(filename):
                 date_str = words[1]
                 break
     try:
-        date = datetime.datetime.strptime(date, date_format)
+        date = datetime.datetime.strptime(date_str, date_format)
     except:
         date = None
     return date
