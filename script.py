@@ -9,7 +9,6 @@ import spotipy
 import spotipy.util as util
 
 
-INTERVAL = datetime.timedelta(weeks=4)
 datapath = lambda path: "data/" + path
 exportpath = lambda path: "export/" + path
 date_format = '%Y-%m-%d'
@@ -103,15 +102,18 @@ def get_followed_artists(sp):
 
 
 @authenticated_operation('user-follow-read')
-def get_new_releases(sp, artists, interval=INTERVAL):
-    """Returns a list of recently released albums"""
+def get_new_releases(sp, artists, date=None):
+    """Returns a list of released albums since the a given date
+    If no date is given, it considers the last 4 weeks"""
+    if date is None:
+        date = datetime.datetime.now() - datetime.timedelta(weeks=4)
     new_releases = []
     for artist in artists:
         results = sp.artist_albums(artist['id'])
         # only use last album
         album = results['items'][0]
         release_date = parse_release_date(album['release_date'])
-        if release_date > datetime.datetime.now() - interval:
+        if release_date > date:
             new_releases.append(album)
     return new_releases
 
@@ -159,9 +161,9 @@ def main():
     #artists = get_followed_artists(username)
     #write_json(artists, datapath("artists.json"))
     #new_releases = get_new_releases(username, artists)
-    #new_releases = read_json(datapath("new_releases.json"))
-    #write_file(parse_albums(new_releases),
-    #           exportpath("new_releases.wiki"))
+    new_releases = read_json(datapath("new_releases.json"))
+    write_file(parse_albums(new_releases),
+               exportpath("new_releases.wiki"))
     return username
 
 
