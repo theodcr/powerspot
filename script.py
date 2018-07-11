@@ -129,7 +129,7 @@ def parse_albums(albums_json, write_date=True):
     Optionally write the current date"""
     output = ""
     if write_date:
-        output += "%date {datetime.datetime.now().strftime(date_format)}"
+        output += f"%date {datetime.datetime.now().strftime(date_format)}\n"
     albums = (album['name'] for album in albums_json)
     artists = (album['artists'][0]['name'] for album in albums_json)
     dates = (album['release_date'] for album in albums_json)
@@ -147,9 +147,10 @@ def read_date(filename):
             if words[0][1:] == 'date':
                 date_str = words[1]
                 break
-    date = None
     try:
         date = datetime.datetime.strptime(date, date_format)
+    except:
+        date = None
     return date
 
 
