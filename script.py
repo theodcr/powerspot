@@ -7,6 +7,7 @@ import os
 import pprint
 import spotipy
 import spotipy.util as util
+from tqdm import tqdm
 
 
 datapath = lambda path: "data/" + path
@@ -108,7 +109,7 @@ def get_new_releases(sp, artists, date=None):
     if date is None:
         date = datetime.datetime.now() - datetime.timedelta(weeks=4)
     new_releases = []
-    for artist in artists:
+    for artist in tqdm(artists):
         results = sp.artist_albums(artist['id'])
         # only use last album
         album = results['items'][0]
