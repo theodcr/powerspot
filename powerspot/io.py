@@ -2,6 +2,7 @@
 
 import datetime
 import json
+from tabulate import tabulate
 
 datapath = lambda path: "data/" + path
 exportpath = lambda path: "export/" + path
@@ -38,6 +39,19 @@ def parse_albums(albums_json, print_date=True):
     dates = (album['release_date'] for album in albums_json)
     for artist, album, date in zip(artists, albums, dates):
         output += f"- {artist} - {album} - {date}\n"
+    return output
+
+
+def tabulate_albums(albums_json, print_date=True):
+    """Parses albums from JSON format to a table using tabulate
+    Optionally write the current date"""
+    output = ""
+    if print_date:
+        output += f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
+    albums = ((album['artists'][0]['name'],
+               album['name'],
+               album['release_date']) for album in albums_json)
+    output += tabulate(albums, headers=['Artiste', 'Album', 'Date'])
     return output
 
 
