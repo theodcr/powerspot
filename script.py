@@ -127,11 +127,11 @@ def save_albums(sp, albums):
     return results
 
 
-def parse_albums(albums_json, write_date=True):
+def parse_albums(albums_json, print_date=True):
     """Parses albums from JSON format to a readable list
     Optionally write the current date"""
     output = ""
-    if write_date:
+    if print_date:
         output += f"%date {datetime.datetime.now().strftime(date_format)}\n"
     albums = (album['name'] for album in albums_json)
     artists = (album['artists'][0]['name'] for album in albums_json)
