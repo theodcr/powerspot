@@ -1,18 +1,11 @@
-#!/usr/bin/env python3
-"""Collection of functions to enhance the Spotify experience"""
+"""Functions that access the Spotify account to retrieve data or modify
+the user library"""
 
 import datetime
-import json
 import os
-import pprint
 import spotipy
 import spotipy.util as util
 from tqdm import tqdm
-
-
-datapath = lambda path: "data/" + path
-exportpath = lambda path: "export/" + path
-date_format = '%Y-%m-%d'
 
 
 def parse_release_date(date):
@@ -24,25 +17,6 @@ def parse_release_date(date):
     return output
 
 
-def write_file(content, filename):
-    """Writes the given content in a file"""
-    with open(filename, 'w') as file_content:
-        file_content.write(content)
-
-
-def read_json(filename):
-    """Reads the content of a JSON file"""
-    with open(filename, 'r') as file_content:
-        content = json.load(file_content)
-    return content
-
-
-def write_json(content, filename):
-    """Writes the given content in a JSON file"""
-    with open(filename, 'w') as file_content:
-        file_content.write(json.dumps(content))
-
-
 def get_username():
     """Gets or prompts the user for the username"""
     username = os.getenv('SPOTIFY_USER')
@@ -50,13 +24,13 @@ def get_username():
         # find the username in the cache
         for filename in os.listdir('.'):
             if filename[:6] == '.cache':
-                is_username = raw_input(
+                is_username = input(
                     f"Use cached username '{filename[7:]}'? (y) ")
                 if is_username == 'y':
                     username = filename[7:]
                     break
     if username is None:
-        username = raw_input("Please enter your username: ")
+        username = input("Please enter your username: ")
     return username
 
 
@@ -76,9 +50,8 @@ def authenticated_operation(scope):
             if token:
                 sp = spotipy.Spotify(auth=token)
                 return function(sp, *args, **kwargs)
-            else:
-                print("Can't get token for", username)
-                return None
+            print("Can't get token for", username)
+            return None
         return wrapper
     return real_decorator
 
@@ -98,7 +71,7 @@ def get_followed_artists(sp):
     while results['next']:
         results = sp.next(results)['artists']
         artists.extend(results['items'])
-    artists.sort(key=lambda artist:artist['name'].lower())
+    artists.sort(key=lambda artist: artist['name'].lower())
     return artists
 
 
@@ -125,48 +98,3 @@ def save_albums(sp, albums):
     ids = [album['id'] for album in albums]
     results = sp.current_user_saved_albums_add(ids)
     return results
-
-
-def parse_albums(albums_json, print_date=True):
-    """Parses albums from JSON format to a readable list
-    Optionally write the current date"""
-    output = ""
-    if print_date:
-        output += f"%date {datetime.datetime.now().strftime(date_format)}\n"
-    albums = (album['name'] for album in albums_json)
-    artists = (album['artists'][0]['name'] for album in albums_json)
-    dates = (album['release_date'] for album in albums_json)
-    for artist, album, date in zip(artists, albums, dates):
-        output += f"- {artist} - {album} - {date}\n"
-    return output
-
-
-def read_date(filename):
-    """Reads and returns the date metadata contained in the file
-    Returns None if date could not be found or read"""
-    with open(filename, 'r') as file_content:
-        while True:
-            words = file_content.readline().split()
-            if words[0][1:] == 'date':
-                date_str = words[1]
-                break
-    try:
-        date = datetime.datetime.strptime(date_str, date_format)
-    except:
-        date = None
-    return date
-
-
-def main():
-    username = get_username()
-    #artists = get_followed_artists(username)
-    #write_json(artists, datapath("artists.json"))
-    #new_releases = get_new_releases(username, artists)
-    new_releases = read_json(datapath("new_releases.json"))
-    write_file(parse_albums(new_releases),
-               exportpath("new_releases.wiki"))
-    return username
-
-
-if __name__ == '__main__':
-    main()
