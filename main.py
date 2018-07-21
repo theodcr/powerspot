@@ -2,11 +2,11 @@
 """Enhance the Spotify experience
 Main script to calls functions from the CLI"""
 
-import pprint
 from powerspot import io, spotify
 
 
 def main():
+    """Main function called by executing this file"""
     username = spotify.get_username()
     #artists = get_followed_artists(username)
     #io.write_json(artists, io.datapath("artists.json"))

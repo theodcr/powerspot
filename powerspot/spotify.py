@@ -4,7 +4,6 @@ the user library"""
 import datetime
 import os
 import spotipy
-import spotipy.util as util
 from tqdm import tqdm
 
 
@@ -46,7 +45,7 @@ def authenticated_operation(scope):
     """Decorator for spotipy functions that need a token"""
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):
-            token = util.prompt_for_user_token(username, scope)
+            token = spotipy.util.prompt_for_user_token(username, scope)
             if token:
                 sp = spotipy.Spotify(auth=token)
                 return function(sp, *args, **kwargs)
