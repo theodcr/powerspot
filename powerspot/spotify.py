@@ -19,18 +19,15 @@ def parse_release_date(date):
 
 def get_username():
     """Gets or prompts the user for the username"""
-    username = os.getenv('SPOTIFY_USER')
+    # find the username in the cache
+    for filename in os.listdir('.'):
+        if filename[:6] == '.cache':
+            if click.confirm(
+                    f"Use cached username '{filename[7:]}'?"):
+                username = filename[7:]
+                break
     if username is None:
-        # find the username in the cache
-        for filename in os.listdir('.'):
-            if filename[:6] == '.cache':
-                is_username = input(
-                    f"Use cached username '{filename[7:]}'? (y) ")
-                if is_username == 'y':
-                    username = filename[7:]
-                    break
-    if username is None:
-        username = input("Please enter your username: ")
+        username = click.prompt("Please enter your username")
     return username
 
 

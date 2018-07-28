@@ -36,6 +36,10 @@ def main(ctx, username):
     click.echo(click.style(
         "Enhance the Spotify experience",
         fg='magenta', bold=True))
+
+    if username is None:
+        username = spotify.get_username()
+
     click.echo(click.style(
         f"Welcome {username}\n",
         fg='blue'))
@@ -56,7 +60,7 @@ def echo_feedback(before, after):
 #@echo_feedback("Fetching artists...", "Artists fetched!")
 
 @main.command()
-@click.option('--file', type=click.File('r'))
+@click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
 @echo_feedback("Fetching artists...", "Artists fetched!")
 def artists(ctx, file):
