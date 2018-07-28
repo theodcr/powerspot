@@ -3,8 +3,9 @@ the user library"""
 
 import datetime
 import os
+import click
 import spotipy
-from tqdm import tqdm
+import spotipy.util
 
 
 def parse_release_date(date):
@@ -81,13 +82,14 @@ def get_new_releases(sp, artists, date=None):
     if date is None:
         date = datetime.datetime.now() - datetime.timedelta(weeks=4)
     new_releases = []
-    for artist in tqdm(artists):
-        results = sp.artist_albums(artist['id'])
-        # only use last album
-        album = results['items'][0]
-        release_date = parse_release_date(album['release_date'])
-        if release_date > date:
-            new_releases.append(album)
+    with click.progressbar(artists) as progress_bar:
+        for artist in progress_bar:
+            results = sp.artist_albums(artist['id'])
+            # only use last album
+            album = results['items'][0]
+            release_date = parse_release_date(album['release_date'])
+            if release_date > date:
+                new_releases.append(album)
     return new_releases
 
 
