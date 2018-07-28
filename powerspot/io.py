@@ -1,11 +1,9 @@
-"""Input and output functions to store parse and export Spotify data"""
+"""Input and output functions to store, parse and export Spotify data"""
 
 import datetime
 import json
 from tabulate import tabulate
 
-datapath = lambda path: "data/" + path
-exportpath = lambda path: "export/" + path
 DATE_FORMAT = '%Y-%m-%d'
 
 
