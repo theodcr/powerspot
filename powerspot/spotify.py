@@ -76,11 +76,11 @@ def get_followed_artists(sp):
 
 
 @authenticated_operation('user-follow-read')
-def get_new_releases(sp, artists, date=None):
-    """Returns a list of released albums since the a given date
-    If no date is given, it considers the last 4 weeks"""
+def get_new_releases(sp, artists, date=None, weeks=4):
+    """Returns a list of released albums from the given artists
+    since the a given date (first choice) or during a given interval"""
     if date is None:
-        date = datetime.datetime.now() - datetime.timedelta(weeks=4)
+        date = datetime.datetime.now() - datetime.timedelta(weeks=weeks)
     new_releases = []
     with click.progressbar(artists) as progress_bar:
         for artist in progress_bar:
