@@ -50,7 +50,9 @@ def authenticated_operation(scope):
             if token:
                 sp = spotipy.Spotify(auth=token)
                 return function(sp, *args, **kwargs)
-            print("Can't get token for", username)
+            click.echo(click.style(
+                f"Can't get token for {username}",
+                fg='red', bold=True))
             return None
         return wrapper
     return real_decorator
@@ -82,7 +84,9 @@ def get_new_releases(sp, artists, date=None, weeks=4):
     if date is None:
         date = datetime.datetime.now() - datetime.timedelta(weeks=weeks)
     new_releases = []
-    with click.progressbar(artists) as progress_bar:
+    click.echo(f"Fetching from {date.strftime('%Y-%m-%d')}")
+    with click.progressbar(artists,
+                           label="Fetching new releases") as progress_bar:
         for artist in progress_bar:
             results = sp.artist_albums(artist['id'])
             # only use last album
