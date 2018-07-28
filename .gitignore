@@ -4,6 +4,5 @@ __pycache__/
 .cache*
 *.wiki
 *.json
-data/
-export/
+*.egg-info
 venv/
