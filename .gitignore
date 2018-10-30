@@ -1,8 +1,14 @@
+# python
 __pycache__/
 *.py[cod]
 *$py.class
-.cache*
-*.wiki
-*.json
 *.egg-info
 venv/
+
+# data
+*.wiki
+*.json
+
+# misc
+tags
+.cache*
