@@ -24,8 +24,6 @@ GREET = """
                                    /_/
 """
 
-SLOGAN = "Enhance the Spotify experience"
-
 
 @click.group(chain=True)
 @click.option('--username', default=lambda: os.getenv('SPOTIFY_USER'))
@@ -33,7 +31,6 @@ SLOGAN = "Enhance the Spotify experience"
 def main(ctx, username):
     """CLI for automated operations with Spotify"""
     click.echo(click.style(GREET, fg='magenta', bold=True))
-    click.echo(click.style(SLOGAN, fg='magenta', bold=True))
 
     if username is None:
         username = helpers.get_username()
@@ -44,6 +41,7 @@ def main(ctx, username):
 
 
 def echo_feedback(before, after):
+    """Decorators to echo messages before and after calling a function"""
     def pass_obj(function):
         @click.pass_context
         def wrapper(ctx, *args, **kwargs):
