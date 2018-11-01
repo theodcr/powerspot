@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Enhance the Spotify experience
+"""
 Main script to calls functions from the CLI
 Click context can contain:
 - artists as json string
@@ -23,18 +23,20 @@ GREET = """
                                    /_/
 """
 
+SLOGAN = "Enhance the Spotify experience"
+
 
 @click.group(chain=True)
 @click.option('--username',
               default=lambda: os.getenv('SPOTIFY_USER'))
 @click.pass_context
 def main(ctx, username):
-    """Enhance the Spotify experience"""
+    """CLI for automated operations with Spotify"""
     click.echo(click.style(
         GREET,
         fg='magenta', bold=True))
     click.echo(click.style(
-        "Enhance the Spotify experience",
+        SLOGAN,
         fg='magenta', bold=True))
 
     if username is None:
