@@ -22,8 +22,7 @@ def get_username():
     # find the username in the cache
     for filename in os.listdir('.'):
         if filename[:6] == '.cache':
-            if click.confirm(
-                    f"Use cached username '{filename[7:]}'?"):
+            if click.confirm(f"Use cached username '{filename[7:]}'?"):
                 username = filename[7:]
                 break
     if username is None:
@@ -33,23 +32,30 @@ def get_username():
 
 def operation(function):
     """Decorator for spotipy functions that don't need a token"""
+
     def wrapper(*args, **kwargs):
         sp = spotipy.Spotify()
         return function(sp, *args, **kwargs)
+
     return wrapper
 
 
 def authenticated_operation(scope):
     """Decorator for spotipy functions that need a token"""
+
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):
             token = prompt_for_user_token(username, scope)
             if token:
                 sp = spotipy.Spotify(auth=token)
                 return function(sp, *args, **kwargs)
-            click.echo(click.style(
-                f"Can't get token for {username}",
-                fg='red', bold=True))
+            click.echo(
+                click.style(
+                    f"Can't get token for {username}", fg='red', bold=True
+                )
+            )
             return None
+
         return wrapper
+
     return real_decorator

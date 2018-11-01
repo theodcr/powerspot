@@ -46,9 +46,10 @@ def tabulate_albums(albums_json, print_date=True):
     output = ""
     if print_date:
         output += f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
-    albums = ((album['artists'][0]['name'],
-               album['name'],
-               album['release_date']) for album in albums_json)
+    albums = (
+        (album['artists'][0]['name'], album['name'], album['release_date'])
+        for album in albums_json
+    )
     output += tabulate(albums, headers=['Artiste', 'Album', 'Date'])
     return output
 

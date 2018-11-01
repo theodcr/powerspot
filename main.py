@@ -28,24 +28,17 @@ SLOGAN = "Enhance the Spotify experience"
 
 
 @click.group(chain=True)
-@click.option('--username',
-              default=lambda: os.getenv('SPOTIFY_USER'))
+@click.option('--username', default=lambda: os.getenv('SPOTIFY_USER'))
 @click.pass_context
 def main(ctx, username):
     """CLI for automated operations with Spotify"""
-    click.echo(click.style(
-        GREET,
-        fg='magenta', bold=True))
-    click.echo(click.style(
-        SLOGAN,
-        fg='magenta', bold=True))
+    click.echo(click.style(GREET, fg='magenta', bold=True))
+    click.echo(click.style(SLOGAN, fg='magenta', bold=True))
 
     if username is None:
         username = helpers.get_username()
 
-    click.echo(click.style(
-        f"Welcome {username}\n",
-        fg='blue'))
+    click.echo(click.style(f"Welcome {username}\n", fg='blue'))
     ctx.obj = {}
     ctx.obj['username'] = username
 
@@ -57,7 +50,9 @@ def echo_feedback(before, after):
             click.echo(click.style(before, fg='cyan'))
             ctx.invoke(function, *args, **kwargs)
             click.echo(click.style(f"{after}\n", fg='blue', bold=True))
+
         return update_wrapper(wrapper, function)
+
     return pass_obj
 
 
@@ -94,14 +89,13 @@ def releases(ctx, file, read_date, weeks):
         else:
             date = None
             if weeks is None:
-                weeks = click.prompt("Fetch time interval in weeks",
-                                     type=int, default=4)
+                weeks = click.prompt(
+                    "Fetch time interval in weeks", type=int, default=4
+                )
         if 'artists' in ctx.obj:
             new_releases = operations.get_new_releases(
-                ctx.obj['username'],
-                ctx.obj['artists'],
-                date=date,
-                weeks=weeks)
+                ctx.obj['username'], ctx.obj['artists'], date=date, weeks=weeks
+            )
         else:
             click.echo("Artists not in context, discarding", err=True)
         click.echo(io.tabulate_albums(new_releases, print_date=False))

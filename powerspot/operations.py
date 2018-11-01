@@ -36,8 +36,9 @@ def get_new_releases(sp, artists, date=None, weeks=4):
         date = datetime.datetime.now() - datetime.timedelta(weeks=weeks)
     new_releases = []
     click.echo(f"Fetching from {date.strftime('%Y-%m-%d')}")
-    with click.progressbar(artists,
-                           label="Fetching new releases") as progress_bar:
+    with click.progressbar(
+        artists, label="Fetching new releases"
+    ) as progress_bar:
         for artist in progress_bar:
             results = sp.artist_albums(artist['id'])
             # only use last album
