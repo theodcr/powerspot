@@ -49,6 +49,18 @@ def get_new_releases(sp, artists, date=None, weeks=4):
     return new_releases
 
 
+@authenticated_operation('user-library-read')
+def get_saved_albums(sp):
+    """Returns a list of albums saved in user library"""
+    albums = []
+    results = sp.current_user_saved_albums(limit=50)
+    albums.extend(results['items'])
+    while results['next']:
+        results = sp.next(results)
+        albums.extend(results['items'])
+    return albums
+
+
 @authenticated_operation('user-library-modify')
 def save_albums(sp, albums):
     """Saves the albums in the user library"""

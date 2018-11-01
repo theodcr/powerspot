@@ -3,7 +3,7 @@
 Main script to calls functions from the CLI
 Click context can contain:
 - artists as json string
-- new releases as json string
+- albums as json string
 - export, which is the result from the last command in the pipe
 """
 
@@ -54,6 +54,20 @@ def echo_feedback(before, after):
         return update_wrapper(wrapper, function)
 
     return pass_obj
+
+
+@main.command()
+@click.option('--file', '-f', type=click.File('r'))
+@click.pass_context
+@echo_feedback("Fetching saved albums...", "Albums fetched!")
+def albums(ctx, file):
+    """Fetches saved albums from Spotify user library"""
+    if file is not None:
+        albums = json.load(file)
+    else:
+        albums = operations.get_saved_albums(ctx.obj['username'])
+    ctx.obj['albums'] = albums
+    ctx.obj['export'] = albums
 
 
 @main.command()
