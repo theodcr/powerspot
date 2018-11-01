@@ -7,12 +7,13 @@ Click context can contain:
 - export, which is the result from the last command in the pipe
 """
 
-from functools import update_wrapper
 import json
 import os
-import click
-from powerspot import io, spotify
+from functools import update_wrapper
 
+import click
+
+from powerspot import helpers, io, spotify
 
 GREET = """
     ____                          _____             __
@@ -40,7 +41,7 @@ def main(ctx, username):
         fg='magenta', bold=True))
 
     if username is None:
-        username = spotify.get_username()
+        username = helpers.get_username()
 
     click.echo(click.style(
         f"Welcome {username}\n",
