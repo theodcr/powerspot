@@ -1,4 +1,5 @@
+from . import helpers
 from . import io
-from . import spotify
+from . import operations
 
-__all__ = ['io', 'spotify']
+__all__ = ['helpers', 'io', 'operations']

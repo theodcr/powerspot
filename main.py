@@ -13,7 +13,7 @@ from functools import update_wrapper
 
 import click
 
-from powerspot import helpers, io, spotify
+from powerspot import helpers, io, operations
 
 GREET = """
     ____                          _____             __
@@ -70,7 +70,7 @@ def artists(ctx, file):
     if file is not None:
         artists = json.load(file)
     else:
-        artists = spotify.get_followed_artists(ctx.obj['username'])
+        artists = operations.get_followed_artists(ctx.obj['username'])
     ctx.obj['artists'] = artists
     ctx.obj['export'] = artists
 
@@ -97,7 +97,7 @@ def releases(ctx, file, read_date, weeks):
                 weeks = click.prompt("Fetch time interval in weeks",
                                      type=int, default=4)
         if 'artists' in ctx.obj:
-            new_releases = spotify.get_new_releases(
+            new_releases = operations.get_new_releases(
                 ctx.obj['username'],
                 ctx.obj['artists'],
                 date=date,
@@ -114,7 +114,7 @@ def releases(ctx, file, read_date, weeks):
 @echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx):
     """Saves new releases in the Spotify profile"""
-    spotify.save_albums(ctx.obj['username'], ctx.obj['new_releases'])
+    operations.save_albums(ctx.obj['username'], ctx.obj['new_releases'])
 
 
 @main.command()
