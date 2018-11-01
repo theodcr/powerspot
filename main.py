@@ -57,7 +57,6 @@ def echo_feedback(before, after):
         return update_wrapper(wrapper, function)
     return pass_obj
 
-#@echo_feedback("Fetching artists...", "Artists fetched!")
 
 @main.command()
 @click.option('--file', '-f', type=click.File('r'))
@@ -74,34 +73,41 @@ def artists(ctx, file):
 
 
 @main.command()
+@click.option('--file', '-f', type=click.File('r'))
 @click.option('--read-date', '-r', type=click.Path(exists=True))
 @click.option('--weeks', '-w', type=click.IntRange(1))
 @click.pass_context
 @echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
-def releases(ctx, read_date, weeks):
+def releases(ctx, file, read_date, weeks):
     """Fetches new releases from given artists"""
-    # Uses date from optional file, else uses the weeks option
-    # else prompts for a number of weeks
-    if read_date is not None:
-        date = io.read_date(read_date)
-        weeks = None
+    if file is not None:
+        new_releases = json.load(file)
     else:
-        date = None
-        if weeks is None:
-            weeks = click.prompt("Fetch time interval in weeks",
-                                 type=int, default=4)
-    if 'artists' in ctx.obj:
-        new_releases = spotify.get_new_releases(
-            ctx.obj['username'],
-            ctx.obj['artists'],
-            date=date,
-            weeks=weeks)
-    click.echo(io.tabulate_albums(new_releases, print_date=False))
+        # Uses date from optional file, else uses the weeks option
+        # else prompts for a number of weeks
+        if read_date is not None:
+            date = io.read_date(read_date)
+            weeks = None
+        else:
+            date = None
+            if weeks is None:
+                weeks = click.prompt("Fetch time interval in weeks",
+                                     type=int, default=4)
+        if 'artists' in ctx.obj:
+            new_releases = spotify.get_new_releases(
+                ctx.obj['username'],
+                ctx.obj['artists'],
+                date=date,
+                weeks=weeks)
+        else:
+            click.echo("Artists not in context, discarding", err=True)
+        click.echo(io.tabulate_albums(new_releases, print_date=False))
     ctx.obj['new_releases'] = new_releases
     ctx.obj['export'] = new_releases
 
 
 @main.command()
+@click.pass_context
 @echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx):
     """Saves new releases in the Spotify profile"""
