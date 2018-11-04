@@ -14,7 +14,6 @@ setup(
     long_description_content_type='text/markdown',
     python_requires='>=3.6.0',
     url='https://github.com/theolamayo/powerspot',
-    py_modules=['powerspot'],
     packages=find_packages(),
     entry_points='''
         [console_scripts]

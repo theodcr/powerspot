@@ -4,8 +4,10 @@ Helpers and wrappers to access and modifySpotify user data
 
 import datetime
 import os
+
 import spotipy
 from spotipy.util import prompt_for_user_token
+from spotipy.oauth2 import SpotifyClientCredentials
 
 
 def parse_release_date(date):
@@ -34,14 +36,14 @@ def operation(function):
     """Decorator for spotipy functions that don't need a token"""
 
     def wrapper(*args, **kwargs):
-        sp = spotipy.Spotify()
+        credentials = SpotifyClientCredentials()
+        sp = spotipy.Spotify(client_credentials_manager=credentials)
         return function(sp, *args, **kwargs)
-
     return wrapper
 
 
-def authenticated_operation(scope):
-    """Decorator for spotipy functions that need a token"""
+def scope_operation(scope):
+    """Decorator for spotipy functions that need a token in a given scope"""
 
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):

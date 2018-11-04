@@ -6,7 +6,7 @@ the user library
 import datetime
 import click
 
-from .helpers import authenticated_operation, operation, parse_release_date
+from .helpers import operation, parse_release_date, scope_operation
 
 
 @operation
@@ -15,7 +15,7 @@ def get_album(sp, album_id):
     return sp.album(album_id)
 
 
-@authenticated_operation('user-follow-read')
+@scope_operation('user-follow-read')
 def get_followed_artists(sp):
     """Returns the full list of followed artists"""
     artists = []
@@ -28,7 +28,7 @@ def get_followed_artists(sp):
     return artists
 
 
-@authenticated_operation('user-follow-read')
+@scope_operation('user-follow-read')
 def get_new_releases(sp, artists, date=None, weeks=4):
     """Returns a list of released albums from the given artists
     since the a given date (first choice) or during a given interval"""
@@ -49,7 +49,7 @@ def get_new_releases(sp, artists, date=None, weeks=4):
     return new_releases
 
 
-@authenticated_operation('user-library-read')
+@scope_operation('user-library-read')
 def get_saved_albums(sp):
     """Returns a list of albums saved in user library"""
     albums = []
@@ -61,7 +61,7 @@ def get_saved_albums(sp):
     return albums
 
 
-@authenticated_operation('user-library-modify')
+@scope_operation('user-library-modify')
 def save_albums(sp, albums):
     """Saves the albums in the user library"""
     ids = [album['id'] for album in albums]
