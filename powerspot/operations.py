@@ -16,6 +16,11 @@ def get_album(sp, album_id):
 
 
 @operation
+def get_artist_albums(sp, artist_id, album_type='album'):
+    return sp.artist_albums(artist_id, album_type, limit=50)
+
+
+@operation
 def search_artist_album(sp, artist, album, limit=5):
     """Returns the search results for albums given an artist and an album"""
     query = f'album:{album} artist:{artist}'
