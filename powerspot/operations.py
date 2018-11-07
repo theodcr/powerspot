@@ -15,6 +15,21 @@ def get_album(sp, album_id):
     return sp.album(album_id)
 
 
+@operation
+def search_artist_album(sp, artist, album, limit=5):
+    """Returns the search results for albums given an artist and an album"""
+    query = f'album:{album} artist:{artist}'
+    print(query)
+    return sp.search(query, limit=limit, type='album')
+
+
+@operation
+def search_artist(sp, artist, limit=5):
+    """Returns the search results for artists given an artist query"""
+    query = f'artist:{artist}'
+    return sp.search(query, limit=limit, type='artist')
+
+
 @scope_operation('user-follow-read')
 def get_followed_artists(sp):
     """Returns the full list of followed artists"""
