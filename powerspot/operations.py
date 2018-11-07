@@ -30,9 +30,9 @@ def search_artist(sp, artist, limit=5):
 
 
 @operation
-def get_artist_albums(sp, artist_id, album_type='album', limit=20):
+def get_artist_albums(sp, artist_id, album_type='album', country='FR', limit=20):
     """Returns the albums of an artist given its ID or URI"""
-    return sp.artist_albums(artist_id, album_type=album_type)
+    return sp.artist_albums(artist_id, album_type=album_type, country=country)
 
 
 @scope_operation('user-follow-read')
