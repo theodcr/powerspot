@@ -29,6 +29,12 @@ def search_artist(sp, artist, limit=5):
     return sp.search(query, limit=limit, type='artist')['artists']
 
 
+@operation
+def get_artist_albums(sp, artist_id, album_type='album', limit=20):
+    """Returns the albums of an artist given its ID or URI"""
+    return sp.artist_albums(artist_id, album_type=album_type)
+
+
 @scope_operation('user-follow-read')
 def get_followed_artists(sp):
     """Returns the full list of followed artists"""
