@@ -5,6 +5,7 @@ Helpers and wrappers to access and modifySpotify user data
 import datetime
 import os
 
+import click
 import spotipy
 from spotipy.util import prompt_for_user_token
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -21,6 +22,7 @@ def parse_release_date(date):
 
 def get_username():
     """Gets or prompts the user for the username"""
+    username = None
     # find the username in the cache
     for filename in os.listdir('.'):
         if filename[:6] == '.cache':
