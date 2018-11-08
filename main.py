@@ -116,17 +116,30 @@ def releases(ctx, file, read_date, weeks):
 
 
 @main.command()
+@click.option('--ask', '-a', is_flag=True, help='ask which albums to save')
 @click.pass_context
 @echo_feedback("Saving releases to account...", "Releases saved!")
-def save(ctx):
+def save(ctx, ask):
     """Saves new releases in the Spotify profile"""
-    operations.save_albums(ctx.obj['username'], ctx.obj['new_releases'])
+    if ask:
+        albums_to_save = []
+        for album in ctx.obj['new_releases']:
+            click.echo(
+                click.style(album['artists'][0]['name'], fg='magenta', bold=True)
+                + click.style(' - ', fg='white')
+                + click.style(album['name'], fg='blue', bold=True)
+            )
+            if click.confirm("Save album", default=True):
+                albums_to_save.append(album)
+    else:
+        albums_to_save = ctx.obj['new_releases']
+    operations.save_albums(ctx.obj['username'], albums_to_save)
 
 
 @main.command()
 @click.argument('file', type=click.File('w'))
-@echo_feedback("Writing to file...", "Done!")
 @click.pass_context
+@echo_feedback("Writing to file...", "Done!")
 def write(ctx, file):
     """Writes the results from the last command to a json or wiki file"""
     if file.name.split('.')[-1] == 'wiki':
