@@ -106,7 +106,7 @@ def releases(ctx, file, read_date, weeks):
                 )
         if 'artists' in ctx.obj:
             new_releases = operations.get_new_releases(
-                ctx.obj['username'], ctx.obj['artists'], date=date, weeks=weeks
+                ctx.obj['artists'], date=date, weeks=weeks
             )
         else:
             click.echo("Artists not in context, discarding", err=True)
