@@ -22,9 +22,15 @@ def get_artist_albums(sp, artist_id, album_type='album', country='FR', limit=20)
 
 
 @operation
-def search_artist_album(sp, artist, album, limit=5):
-    """Returns the search results for albums given an artist and an album"""
-    query = f'album:{album} artist:{artist}'
+def search_album(sp, album, artist=None, year=None, limit=5):
+    """Returns the search results for albums given an album query
+    Artist and year are optional
+    """
+    query = f'album:{album}'
+    if artist is not None:
+        query += f' artist:{artist}'
+    if year is not None:
+        query += f' year:{year}'
     return sp.search(query, limit=limit, type='album')['albums']
 
 
