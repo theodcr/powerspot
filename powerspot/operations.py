@@ -16,8 +16,9 @@ def get_album(sp, album_id):
 
 
 @operation
-def get_artist_albums(sp, artist_id, album_type='album'):
-    return sp.artist_albums(artist_id, album_type, limit=50)
+def get_artist_albums(sp, artist_id, album_type='album', country='FR', limit=20):
+    """Returns the albums of an artist given its ID or URI"""
+    return sp.artist_albums(artist_id, album_type=album_type, country=country)
 
 
 @operation
@@ -32,12 +33,6 @@ def search_artist(sp, artist, limit=5):
     """Returns the search results for artists given an artist query"""
     query = f'artist:{artist}'
     return sp.search(query, limit=limit, type='artist')['artists']
-
-
-@operation
-def get_artist_albums(sp, artist_id, album_type='album', country='FR', limit=20):
-    """Returns the albums of an artist given its ID or URI"""
-    return sp.artist_albums(artist_id, album_type=album_type, country=country)
 
 
 @scope_operation('user-follow-read')
