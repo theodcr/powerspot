@@ -9,20 +9,10 @@ Click context can contain:
 
 import json
 import os
-from functools import update_wrapper
 
 import click
 
-from powerspot import helpers, io, operations
-
-GREET = """
-    ____                          _____             __
-   / __ \____ _      _____  _____/ ___/____  ____  / /_
-  / /_/ / __ \ | /| / / _ \/ ___/\__ \/ __ \/ __ \/ __/
- / ____/ /_/ / |/ |/ /  __/ /   ___/ / /_/ / /_/ / /_
-/_/    \____/|__/|__/\___/_/   /____/ .___/\____/\__/
-                                   /_/
-"""
+from powerspot import helpers, io, operations, ui
 
 
 @click.group(chain=True)
@@ -30,7 +20,7 @@ GREET = """
 @click.pass_context
 def main(ctx, username):
     """CLI for automated operations with Spotify"""
-    click.echo(click.style(GREET, fg='magenta', bold=True))
+    click.echo(click.style(ui.GREET, fg='magenta', bold=True))
 
     if username is None:
         username = helpers.get_username()
@@ -40,24 +30,10 @@ def main(ctx, username):
     ctx.obj['username'] = username
 
 
-def echo_feedback(before, after):
-    """Decorators to echo messages before and after calling a function"""
-    def pass_obj(function):
-        @click.pass_context
-        def wrapper(ctx, *args, **kwargs):
-            click.echo(click.style(before, fg='cyan'))
-            ctx.invoke(function, *args, **kwargs)
-            click.echo(click.style(f"{after}\n", fg='blue', bold=True))
-
-        return update_wrapper(wrapper, function)
-
-    return pass_obj
-
-
 @main.command()
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
-@echo_feedback("Fetching saved albums...", "Albums fetched!")
+@ui.echo_feedback("Fetching saved albums...", "Albums fetched!")
 def albums(ctx, file):
     """Fetches saved albums from Spotify user library"""
     if file is not None:
@@ -71,7 +47,7 @@ def albums(ctx, file):
 @main.command()
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
-@echo_feedback("Fetching artists...", "Artists fetched!")
+@ui.echo_feedback("Fetching artists...", "Artists fetched!")
 def artists(ctx, file):
     """Fetches artists from Spotify profile"""
     if file is not None:
@@ -87,7 +63,7 @@ def artists(ctx, file):
 @click.option('--read-date', '-r', type=click.Path(exists=True))
 @click.option('--weeks', '-w', type=click.IntRange(1))
 @click.pass_context
-@echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
+@ui.echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
 def releases(ctx, file, read_date, weeks):
     """Fetches new releases from given artists"""
     if file is not None:
@@ -118,7 +94,7 @@ def releases(ctx, file, read_date, weeks):
 @main.command()
 @click.option('--ask', '-a', is_flag=True, help='ask which albums to save')
 @click.pass_context
-@echo_feedback("Saving releases to account...", "Releases saved!")
+@ui.echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx, ask):
     """Saves new releases in the Spotify profile"""
     if ask:
@@ -139,7 +115,7 @@ def save(ctx, ask):
 @main.command()
 @click.argument('file', type=click.File('w'))
 @click.pass_context
-@echo_feedback("Writing to file...", "Done!")
+@ui.echo_feedback("Writing to file...", "Done!")
 def write(ctx, file):
     """Writes the results from the last command to a json or wiki file"""
     if file.name.split('.')[-1] == 'wiki':
