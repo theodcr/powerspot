@@ -17,12 +17,8 @@ setup(
     packages=find_packages(),
     entry_points='''
         [console_scripts]
-        powerspot=main:main
+        powerspot=powerspot.cli:main
     ''',
-    install_requires=[
-        'Click',
-        'spotipy',
-        'tabulate',
-    ],
+    install_requires=['Click', 'spotipy', 'tabulate'],
     licence='MIT',
 )
