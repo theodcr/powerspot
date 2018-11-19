@@ -95,3 +95,17 @@ def save_albums(sp, albums):
     ids = [album['id'] for album in albums]
     results = sp.current_user_saved_albums_add(ids)
     return results
+
+
+@scope_operation('user-top-read')
+def get_top_artists(sp, time_range='long_term', limit=20):
+    """Get user top artists"""
+    results = sp.current_user_top_artists(limit=limit, time_range=time_range)['items']
+    return results
+
+
+@scope_operation('user-top-read')
+def get_top_tracks(sp, time_range='long_term', limit=20):
+    """Get user top tracks"""
+    results = sp.current_user_top_tracks(limit=limit, time_range=time_range)['items']
+    return results

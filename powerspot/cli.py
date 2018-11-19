@@ -92,6 +92,40 @@ def releases(ctx, file, read_date, weeks):
 
 
 @main.command()
+@click.option(
+    '--term',
+    '-t',
+    default='long',
+    show_default=True,
+    help='fetch long/medium/short term tops',
+)
+@click.pass_context
+@ui.echo_feedback("Fetching top artists...", "Artists fetched!")
+def topartists(ctx, term):
+    """Fetches user top artists from Spotify profile"""
+    time_range = f'{term}_term'
+    artists = operations.get_top_artists(ctx.obj['username'], time_range=time_range)
+    ctx.obj['export'] = artists
+
+
+@main.command()
+@click.option(
+    '--term',
+    '-t',
+    default='long',
+    show_default=True,
+    help='fetch long/medium/short term tops',
+)
+@click.pass_context
+@ui.echo_feedback("Fetching top tracks...", "Artists fetched!")
+def toptracks(ctx, term):
+    """Fetches user top tracks from Spotify profile"""
+    time_range = f'{term}_term'
+    tracks = operations.get_top_tracks(ctx.obj['username'], time_range=time_range)
+    ctx.obj['export'] = tracks
+
+
+@main.command()
 @click.option('--ask', '-a', is_flag=True, help='ask which albums to save')
 @click.pass_context
 @ui.echo_feedback("Saving releases to account...", "Releases saved!")
