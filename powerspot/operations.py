@@ -55,7 +55,7 @@ def get_followed_artists(sp):
 
 
 @operation
-def get_new_releases(sp, artists, date=None, weeks=4):
+def get_new_releases(sp, artists, date=None, weeks=4, album_type='album', country='FR'):
     """Returns a list of released albums from the given artists
     since the a given date (first choice) or during a given interval"""
     if date is None:
@@ -65,7 +65,7 @@ def get_new_releases(sp, artists, date=None, weeks=4):
     with click.progressbar(artists, label="Fetching new releases") as progress_bar:
         for artist in progress_bar:
             results = sp.artist_albums(
-                artist['id'], album_type='album', country='FR', limit=1
+                artist['id'], album_type=album_type, country=country, limit=1
             )['items']
             if len(results) == 0:
                 continue
