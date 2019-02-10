@@ -20,5 +20,6 @@ setup(
         powerspot=powerspot.cli:main
     ''',
     install_requires=['Click', 'spotipy', 'tabulate'],
+    include_package_data=True,
     licence='MIT',
 )
