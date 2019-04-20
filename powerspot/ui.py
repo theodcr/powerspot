@@ -1,5 +1,5 @@
 """
-Helpers for CLI appearence and UI
+Helpers for CLI appearence and UI.
 """
 
 from functools import update_wrapper
@@ -17,7 +17,7 @@ GREET = """
 
 
 def echo_feedback(before, after):
-    """Decorators to echo messages before and after calling a function"""
+    """Decorators to echo messages before and after calling a function."""
     def pass_obj(function):
         @click.pass_context
         def wrapper(ctx, *args, **kwargs):

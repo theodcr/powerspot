@@ -1,5 +1,5 @@
 """
-Helpers and wrappers to access and modifySpotify user data
+General helpers and wrappers to access and modify Spotify user data.
 """
 
 import datetime
@@ -12,7 +12,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 
 def parse_release_date(date):
-    """Parses the release date in a datetime object"""
+    """Parses the release date in a datetime object."""
     try:
         output = datetime.datetime.strptime(date, '%Y-%m-%d')
     except ValueError:
@@ -21,7 +21,7 @@ def parse_release_date(date):
 
 
 def get_username():
-    """Gets or prompts the user for the username"""
+    """Gets or prompts the user for the username."""
     username = None
     # find the username in the cache
     for filename in os.listdir('.'):
@@ -35,7 +35,7 @@ def get_username():
 
 
 def operation(function):
-    """Decorator for spotipy functions that don't need a token"""
+    """Decorator for spotipy functions that don't need a token."""
 
     def wrapper(*args, **kwargs):
         credentials = SpotifyClientCredentials()
@@ -45,7 +45,7 @@ def operation(function):
 
 
 def scope_operation(scope):
-    """Decorator for spotipy functions that need a token in a given scope"""
+    """Decorator for spotipy functions that need a token in a given scope."""
 
     def real_decorator(function):
         def wrapper(username, *args, **kwargs):

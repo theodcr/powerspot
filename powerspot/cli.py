@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Main script to calls functions from the CLI
+Main script to call functions from the CLI.
 Click context can contain:
-- artists as json string
-- albums as json string
-- export, which is the result from the last command in the pipe
+- `artists` as json string
+- `albums` as json string
+- `export` which is the result from the last command in the pipe
 """
 
 import json
@@ -19,7 +19,7 @@ from powerspot import helpers, io, operations, ui
 @click.option('--username', default=lambda: os.getenv('SPOTIFY_USER'))
 @click.pass_context
 def main(ctx, username):
-    """CLI for automated operations with Spotify"""
+    """CLI for advanced and automated operations with Spotify."""
     click.echo(click.style(ui.GREET, fg='magenta', bold=True))
 
     if username is None:
@@ -35,7 +35,7 @@ def main(ctx, username):
 @click.pass_context
 @ui.echo_feedback("Fetching saved albums...", "Albums fetched!")
 def albums(ctx, file):
-    """Fetches saved albums from Spotify user library"""
+    """Fetches saved albums from Spotify user library."""
     if file is not None:
         albums = json.load(file)
     else:
@@ -49,7 +49,7 @@ def albums(ctx, file):
 @click.pass_context
 @ui.echo_feedback("Fetching artists...", "Artists fetched!")
 def artists(ctx, file):
-    """Fetches artists from Spotify profile"""
+    """Fetches artists from Spotify profile."""
     if file is not None:
         artists = json.load(file)
     else:
@@ -65,7 +65,7 @@ def artists(ctx, file):
 @click.pass_context
 @ui.echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
 def releases(ctx, file, read_date, weeks):
-    """Fetches new releases from given artists"""
+    """Fetches new releases from given artists."""
     if file is not None:
         new_releases = json.load(file)
     else:
@@ -102,7 +102,7 @@ def releases(ctx, file, read_date, weeks):
 @click.pass_context
 @ui.echo_feedback("Fetching top artists...", "Artists fetched!")
 def topartists(ctx, term):
-    """Fetches user top artists from Spotify profile"""
+    """Fetches user top artists from Spotify profile."""
     time_range = f'{term}_term'
     artists = operations.get_top_artists(ctx.obj['username'], time_range=time_range)
     ctx.obj['export'] = artists
@@ -119,7 +119,7 @@ def topartists(ctx, term):
 @click.pass_context
 @ui.echo_feedback("Fetching top tracks...", "Artists fetched!")
 def toptracks(ctx, term):
-    """Fetches user top tracks from Spotify profile"""
+    """Fetches user top tracks from Spotify profile."""
     time_range = f'{term}_term'
     tracks = operations.get_top_tracks(ctx.obj['username'], time_range=time_range)
     ctx.obj['export'] = tracks
@@ -130,7 +130,7 @@ def toptracks(ctx, term):
 @click.pass_context
 @ui.echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx, ask):
-    """Saves new releases in the Spotify profile"""
+    """Saves albums in the Spotify user library."""
     if ask:
         albums_to_save = []
         for album in ctx.obj['new_releases']:
@@ -151,7 +151,7 @@ def save(ctx, ask):
 @click.pass_context
 @ui.echo_feedback("Writing to file...", "Done!")
 def write(ctx, file):
-    """Writes the results from the last command to a json or wiki file"""
+    """Writes the results from the last command to a JSON or wiki file."""
     if file.name.split('.')[-1] == 'wiki':
         file.write(io.tabulate_albums(ctx.obj['export']))
     else:
