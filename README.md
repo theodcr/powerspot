@@ -1,6 +1,6 @@
 # powerspot
 
-Command line interface in Python for advanced and automated operations with Spotify, based on the [click](https://github.com/pallets/click) package.
+Command line interface in Python for advanced and automated operations with Spotify, based on the [click](https://github.com/pallets/click) and [spotipy](https://github.com/plamere/spotipy) packages.
 
 ## Installation instructions
 

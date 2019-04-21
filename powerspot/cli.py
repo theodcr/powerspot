@@ -65,7 +65,7 @@ def artists(ctx, file):
 @click.pass_context
 @ui.echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
 def releases(ctx, file, read_date, weeks):
-    """Fetches new releases from given artists."""
+    """Fetches new releases from artists from last command."""
     if file is not None:
         new_releases = json.load(file)
     else:
@@ -130,7 +130,7 @@ def toptracks(ctx, term):
 @click.pass_context
 @ui.echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx, ask):
-    """Saves albums in the Spotify user library."""
+    """Saves albums from last command to Spotify user library."""
     if ask:
         albums_to_save = []
         for album in ctx.obj['new_releases']:
@@ -151,7 +151,7 @@ def save(ctx, ask):
 @click.pass_context
 @ui.echo_feedback("Writing to file...", "Done!")
 def write(ctx, file):
-    """Writes the results from the last command to a JSON or wiki file."""
+    """Writes results from last command to a file."""
     if file.name.split('.')[-1] == 'wiki':
         file.write(io.tabulate_albums(ctx.obj['export']))
     else:
