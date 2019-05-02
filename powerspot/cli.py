@@ -49,7 +49,7 @@ def albums(ctx, file):
 @click.pass_context
 @ui.echo_feedback("Fetching artists...", "Artists fetched!")
 def artists(ctx, file):
-    """Fetches artists from Spotify profile."""
+    """Fetches artists from file or Spotify profile."""
     if file is not None:
         artists = json.load(file)
     else:
@@ -65,7 +65,7 @@ def artists(ctx, file):
 @click.pass_context
 @ui.echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
 def releases(ctx, file, read_date, weeks):
-    """Fetches new releases from artists from last command."""
+    """Fetches new releases from given artists."""
     if file is not None:
         new_releases = json.load(file)
     else:
@@ -87,7 +87,7 @@ def releases(ctx, file, read_date, weeks):
         else:
             click.echo("Artists not in context, discarding", err=True)
         click.echo(io.tabulate_albums(new_releases, print_date=False))
-    ctx.obj['new_releases'] = new_releases
+    ctx.obj['albums'] = new_releases
     ctx.obj['export'] = new_releases
 
 
@@ -105,6 +105,7 @@ def topartists(ctx, term):
     """Fetches user top artists from Spotify profile."""
     time_range = f'{term}_term'
     artists = operations.get_top_artists(ctx.obj['username'], time_range=time_range)
+    ctx.obj['artists'] = artists
     ctx.obj['export'] = artists
 
 
@@ -117,11 +118,12 @@ def topartists(ctx, term):
     help='fetch long/medium/short term tops',
 )
 @click.pass_context
-@ui.echo_feedback("Fetching top tracks...", "Artists fetched!")
+@ui.echo_feedback("Fetching top tracks...", "Tracks fetched!")
 def toptracks(ctx, term):
     """Fetches user top tracks from Spotify profile."""
     time_range = f'{term}_term'
     tracks = operations.get_top_tracks(ctx.obj['username'], time_range=time_range)
+    ctx.obj['tracks'] = tracks
     ctx.obj['export'] = tracks
 
 
@@ -130,10 +132,10 @@ def toptracks(ctx, term):
 @click.pass_context
 @ui.echo_feedback("Saving releases to account...", "Releases saved!")
 def save(ctx, ask):
-    """Saves albums from last command to Spotify user library."""
+    """Saves albums in the Spotify user library."""
     if ask:
         albums_to_save = []
-        for album in ctx.obj['new_releases']:
+        for album in ctx.obj['albums']:
             click.echo(
                 click.style(album['artists'][0]['name'], fg='magenta', bold=True)
                 + click.style(' - ', fg='white')
@@ -142,7 +144,7 @@ def save(ctx, ask):
             if click.confirm("Save album", default=True):
                 albums_to_save.append(album)
     else:
-        albums_to_save = ctx.obj['new_releases']
+        albums_to_save = ctx.obj['albums']
     operations.save_albums(ctx.obj['username'], albums_to_save)
 
 
@@ -151,7 +153,7 @@ def save(ctx, ask):
 @click.pass_context
 @ui.echo_feedback("Writing to file...", "Done!")
 def write(ctx, file):
-    """Writes results from last command to a file."""
+    """Writes the results from the last command to a JSON or wiki file."""
     if file.name.split('.')[-1] == 'wiki':
         file.write(io.tabulate_albums(ctx.obj['export']))
     else:

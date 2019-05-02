@@ -26,7 +26,9 @@ def get_username():
     # find the username in the cache
     for filename in os.listdir('.'):
         if filename[:6] == '.cache':
-            if click.confirm(f"Use cached username '{filename[7:]}'?"):
+            if click.confirm(
+                    f"Use cached username '{filename[7:]}'?", default=True
+            ):
                 username = filename[7:]
                 break
     if username is None:

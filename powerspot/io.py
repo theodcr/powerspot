@@ -54,7 +54,7 @@ def tabulate_albums(albums_json, print_date=True):
         (album['artists'][0]['name'], album['name'], album['release_date'])
         for album in albums_json
     )
-    output += tabulate(albums, headers=['Artiste', 'Album', 'Date'])
+    output += tabulate(albums, headers=['Artist', 'Album', 'Date'])
     return output
 
 
