@@ -32,9 +32,7 @@ def parse_albums(albums_json, print_date=True):
     """Parses albums from JSON format to a readable string.
     Optionally write the current date at beginning of string.
     """
-    output = ""
-    if print_date:
-        output += f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
+    output = output_date(print_date)
     albums = (album['name'] for album in albums_json)
     artists = (album['artists'][0]['name'] for album in albums_json)
     dates = (album['release_date'] for album in albums_json)
@@ -47,15 +45,19 @@ def tabulate_albums(albums_json, print_date=True):
     """Parses albums from JSON format to a string table using tabulate.
     Optionally write the current date at beginning of string.
     """
-    output = ""
-    if print_date:
-        output += f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
+    output = output_date(print_date)
     albums = (
         (album['artists'][0]['name'], album['name'], album['release_date'])
         for album in albums_json
     )
     output += tabulate(albums, headers=['Artist', 'Album', 'Date'])
     return output
+
+
+def output_date(print_date=True):
+    if print_date:
+        return f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
+    return ""
 
 
 def read_date(filename):
