@@ -86,7 +86,6 @@ def releases(ctx, file, read_date, weeks):
             )
         else:
             click.echo("Artists not in context, discarding", err=True)
-        click.echo(io.tabulate_albums(new_releases, print_date=False))
     ctx.obj['albums'] = new_releases
     ctx.obj['export'] = new_releases
 
@@ -146,6 +145,18 @@ def save(ctx, ask):
     else:
         albums_to_save = ctx.obj['albums']
     operations.save_albums(ctx.obj['username'], albums_to_save)
+
+
+@main.command()
+@click.pass_context
+def show(ctx):
+    """Shows the content of context."""
+    if 'artists' in ctx.obj:
+        click.echo(io.parse_artists(ctx.obj['artists'], print_date=False))
+    if 'tracks' in ctx.obj:
+        click.echo(io.tabulate_tracks(ctx.obj['tracks'], print_date=False))
+    if 'albums' in ctx.obj:
+        click.echo(io.tabulate_albums(ctx.obj['albums'], print_date=False))
 
 
 @main.command()

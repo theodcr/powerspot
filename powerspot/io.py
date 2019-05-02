@@ -28,6 +28,17 @@ def write_json(content, filename):
         file_content.write(json.dumps(content))
 
 
+def parse_artists(artists_json, print_date=True):
+    """Parses artists from JSON format to a readable string.
+    Optionally write the current date at beginning of string.
+    """
+    output = output_date(print_date)
+    artists = (artist['name'] for artist in artists_json)
+    for artist in artists:
+        output += f"- {artist}\n"
+    return output
+
+
 def parse_albums(albums_json, print_date=True):
     """Parses albums from JSON format to a readable string.
     Optionally write the current date at beginning of string.
@@ -51,6 +62,19 @@ def tabulate_albums(albums_json, print_date=True):
         for album in albums_json
     )
     output += tabulate(albums, headers=['Artist', 'Album', 'Date'])
+    return output
+
+
+def tabulate_tracks(tracks_json, print_date=True):
+    """Parses tracks from JSON format to a string table using tabulate.
+    Optionally write the current date at beginning of string.
+    """
+    output = output_date(print_date)
+    tracks = (
+        (track['artists'][0]['name'], track['name'], track['album']['name'])
+        for track in tracks_json
+    )
+    output += tabulate(tracks, headers=['Artist', 'Track', 'Album'])
     return output
 
 
