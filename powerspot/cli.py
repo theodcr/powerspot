@@ -67,7 +67,7 @@ def tracks(ctx, file):
     if file is not None:
         tracks = json.load(file)
     else:
-        tracks = None
+        tracks = operations.get_saved_tracks(ctx.obj['username'])
     ctx.obj['tracks'] = tracks
     ctx.obj['export'] = tracks
 

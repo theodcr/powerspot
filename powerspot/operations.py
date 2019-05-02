@@ -79,7 +79,7 @@ def get_new_releases(sp, artists, date=None, weeks=4, album_type='album', countr
 
 @scope_operation('user-library-read')
 def get_saved_albums(sp):
-    """Returns a list of albums saved in user library"""
+    """Returns the list of albums saved in user library"""
     albums = []
     results = sp.current_user_saved_albums(limit=50)
     albums.extend(results['items'])
@@ -87,6 +87,18 @@ def get_saved_albums(sp):
         results = sp.next(results)
         albums.extend(results['items'])
     return albums
+
+
+@scope_operation('user-library-read')
+def get_saved_tracks(sp):
+    """Returns the list of tracks saved in user library"""
+    tracks = []
+    results = sp.current_user_saved_tracks(limit=50)
+    tracks.extend(results['items'])
+    while results['next']:
+        results = sp.next(results)
+        tracks.extend(results['items'])
+    return tracks
 
 
 @scope_operation('user-library-modify')
