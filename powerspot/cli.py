@@ -33,9 +33,9 @@ def main(ctx, username):
 @main.command()
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
-@ui.echo_feedback("Fetching saved albums...", "Albums fetched!")
+@ui.echo_feedback("Fetching albums...", "Albums fetched!")
 def albums(ctx, file):
-    """Fetches saved albums from Spotify user library."""
+    """Fetches albums from file or Spotify user library."""
     if file is not None:
         albums = json.load(file)
     else:
@@ -56,6 +56,20 @@ def artists(ctx, file):
         artists = operations.get_followed_artists(ctx.obj['username'])
     ctx.obj['artists'] = artists
     ctx.obj['export'] = artists
+
+
+@main.command()
+@click.option('--file', '-f', type=click.File('r'))
+@click.pass_context
+@ui.echo_feedback("Fetching tracks...", "Tracks fetched!")
+def tracks(ctx, file):
+    """Fetches tracks from file or Spotify user library."""
+    if file is not None:
+        tracks = json.load(file)
+    else:
+        tracks = None
+    ctx.obj['tracks'] = tracks
+    ctx.obj['export'] = tracks
 
 
 @main.command()
