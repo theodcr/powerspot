@@ -12,7 +12,23 @@ import os
 
 import click
 
-from powerspot import helpers, io, operations, ui
+from powerspot import io, operations, ui
+
+
+def get_username():
+    """Gets or prompts the user for the username."""
+    username = None
+    # find the username in the cache
+    for filename in os.listdir('.'):
+        if filename[:6] == '.cache':
+            if click.confirm(
+                    f"Use cached username '{filename[7:]}'?", default=True
+            ):
+                username = filename[7:]
+                break
+    if username is None:
+        username = click.prompt("Please enter your username")
+    return username
 
 
 @click.group(chain=True)
@@ -23,7 +39,7 @@ def main(ctx, username):
     click.echo(click.style(ui.GREET, fg='magenta', bold=True))
 
     if username is None:
-        username = helpers.get_username()
+        username = get_username()
 
     click.echo(click.style(f"Welcome {username}\n", fg='blue'))
     ctx.obj = {}

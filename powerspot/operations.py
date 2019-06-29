@@ -6,7 +6,49 @@ the user library
 import datetime
 import click
 
-from .helpers import operation, parse_release_date, scope_operation
+from spotipy import Spotify
+from spotipy.util import prompt_for_user_token
+from spotipy.oauth2 import SpotifyClientCredentials
+
+
+def operation(function):
+    """Decorator for spotipy functions that don't need a token."""
+
+    def wrapper(*args, **kwargs):
+        credentials = SpotifyClientCredentials()
+        sp = Spotify(client_credentials_manager=credentials)
+        return function(sp, *args, **kwargs)
+    return wrapper
+
+
+def scope_operation(scope):
+    """Decorator for spotipy functions that need a token in a given scope."""
+
+    def real_decorator(function):
+        def wrapper(username, *args, **kwargs):
+            token = prompt_for_user_token(username, scope)
+            if token:
+                sp = Spotify(auth=token)
+                return function(sp, *args, **kwargs)
+            click.echo(
+                click.style(
+                    f"Can't get token for {username}", fg='red', bold=True
+                )
+            )
+            return None
+
+        return wrapper
+
+    return real_decorator
+
+
+def parse_release_date(date):
+    """Parses the release date in a datetime object."""
+    try:
+        output = datetime.datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        output = datetime.datetime.strptime(date, '%Y')
+    return output
 
 
 @operation
