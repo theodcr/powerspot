@@ -66,6 +66,7 @@ def albums(ctx, file):
         albums = json.load(file)
     else:
         albums = operations.get_saved_albums(ctx.obj['username'])
+        albums = [album['album'] for album in albums]
     ctx.obj['albums'] = albums
     ctx.obj['export'] = albums
     ctx.obj['last'] = 'albums'
@@ -96,6 +97,7 @@ def tracks(ctx, file):
         tracks = json.load(file)
     else:
         tracks = operations.get_saved_tracks(ctx.obj['username'])
+        tracks = [track['track'] for track in tracks]
     ctx.obj['tracks'] = tracks
     ctx.obj['export'] = tracks
     ctx.obj['last'] = 'tracks'
