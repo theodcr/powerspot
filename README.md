@@ -4,8 +4,16 @@ Command line interface in Python for advanced and automated operations with Spot
 
 ## Installation instructions
 
+Not on PyPI, so clone this repo and install the package with `pip install -e .`. This project uses Python >= 3.6.
+
+## Usage
+
+Examples of commands:
 ```bash
-virtualenv -p python3.6 venv/
-source venv/bin/activate
-pip install .
+# get all artists from Spotify profile and write them
+powerspot artists write artists.json
+# get new releases from artists and save them in Spotify library
+powerspot artists -f artists.json releases save
+# show top tracks
+powerspot toptracks show
 ```
