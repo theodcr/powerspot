@@ -196,7 +196,12 @@ def show(ctx):
 def write(ctx, file):
     """Writes results from last command to a file."""
     if file.name.split('.')[-1] == 'wiki':
-        file.write(io.tabulate_albums(ctx.obj['export']))
+        if 'tracks' in ctx.obj:
+            file.write(io.tabulate_tracks(ctx.obj['export'], print_date=False))
+        elif 'artists' in ctx.obj:
+            file.write(io.parse_artists(ctx.obj['artists'], print_date=False))
+        else:
+            file.write(io.tabulate_albums(ctx.obj['export'], print_date=False))
     else:
         file.write(json.dumps(ctx.obj['export']))
 
