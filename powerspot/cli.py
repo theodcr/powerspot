@@ -2,9 +2,12 @@
 """
 Main script to call functions from the CLI.
 Click context can contain:
+- `username` as a string
 - `artists` as json string
 - `albums` as json string
+- `tracks` as json string
 - `export` which is the result from the last command in the pipe
+- `last` which is the type of data in export (artists, albums, tracks etc)
 """
 
 import json
@@ -13,6 +16,13 @@ import os
 import click
 
 from powerspot import io, operations, ui
+
+
+PARSERS = {
+    'tracks': io.tabulate_tracks,
+    'artists': io.parse_artists,
+    'albums': io.tabulate_albums,
+}
 
 
 def get_username():
@@ -58,6 +68,7 @@ def albums(ctx, file):
         albums = operations.get_saved_albums(ctx.obj['username'])
     ctx.obj['albums'] = albums
     ctx.obj['export'] = albums
+    ctx.obj['last'] = 'albums'
 
 
 @main.command()
@@ -72,6 +83,7 @@ def artists(ctx, file):
         artists = operations.get_followed_artists(ctx.obj['username'])
     ctx.obj['artists'] = artists
     ctx.obj['export'] = artists
+    ctx.obj['last'] = 'artists'
 
 
 @main.command()
@@ -86,6 +98,7 @@ def tracks(ctx, file):
         tracks = operations.get_saved_tracks(ctx.obj['username'])
     ctx.obj['tracks'] = tracks
     ctx.obj['export'] = tracks
+    ctx.obj['last'] = 'tracks'
 
 
 @main.command()
@@ -118,6 +131,7 @@ def releases(ctx, file, read_date, weeks):
             click.echo("Artists not in context, discarding", err=True)
     ctx.obj['albums'] = new_releases
     ctx.obj['export'] = new_releases
+    ctx.obj['last'] = 'albums'
 
 
 @main.command()
@@ -136,6 +150,7 @@ def topartists(ctx, term):
     artists = operations.get_top_artists(ctx.obj['username'], time_range=time_range)
     ctx.obj['artists'] = artists
     ctx.obj['export'] = artists
+    ctx.obj['last'] = 'artists'
 
 
 @main.command()
@@ -154,6 +169,7 @@ def toptracks(ctx, term):
     tracks = operations.get_top_tracks(ctx.obj['username'], time_range=time_range)
     ctx.obj['tracks'] = tracks
     ctx.obj['export'] = tracks
+    ctx.obj['last'] = 'tracks'
 
 
 @main.command()
@@ -181,12 +197,11 @@ def save(ctx, ask):
 @click.pass_context
 def show(ctx):
     """Shows the content of context."""
-    if 'artists' in ctx.obj:
-        click.echo(io.parse_artists(ctx.obj['artists'], print_date=False))
-    if 'tracks' in ctx.obj:
-        click.echo(io.tabulate_tracks(ctx.obj['tracks'], print_date=False))
-    if 'albums' in ctx.obj:
-        click.echo(io.tabulate_albums(ctx.obj['albums'], print_date=False))
+    for key, parser in PARSERS.items():
+        if key in ctx.obj:
+            click.echo(
+                parser(ctx.obj[key], print_date=False)
+            )
 
 
 @main.command()
@@ -196,12 +211,9 @@ def show(ctx):
 def write(ctx, file):
     """Writes results from last command to a file."""
     if file.name.split('.')[-1] == 'wiki':
-        if 'tracks' in ctx.obj:
-            file.write(io.tabulate_tracks(ctx.obj['export'], print_date=False))
-        elif 'artists' in ctx.obj:
-            file.write(io.parse_artists(ctx.obj['artists'], print_date=False))
-        else:
-            file.write(io.tabulate_albums(ctx.obj['export'], print_date=False))
+        file.write(
+            PARSERS[ctx.obj['last']](ctx.obj['export'], print_date=False)
+        )
     else:
         file.write(json.dumps(ctx.obj['export']))
 
