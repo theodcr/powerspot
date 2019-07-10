@@ -7,13 +7,14 @@ dist/
 __pycache__/
 *$py.class
 venv/
+.mypy_cache/
 
 # data
 *.wiki
 *.json
 
 # misc
-tags
+tags*
 
 # spotipy cache
 .cache*
