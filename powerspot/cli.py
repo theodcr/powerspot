@@ -12,6 +12,7 @@ Click context can contain:
 
 import json
 import os
+from _io import TextIOWrapper
 
 import click
 
@@ -25,7 +26,7 @@ PARSERS = {
 }
 
 
-def get_username():
+def get_username() -> str:
     """Gets or prompts the user for the username."""
     username = None
     # find the username in the cache
@@ -44,7 +45,7 @@ def get_username():
 @click.group(chain=True)
 @click.option('--username', default=lambda: os.getenv('SPOTIFY_USER'))
 @click.pass_context
-def main(ctx, username):
+def main(ctx: click.Context, username: str) -> None:
     """CLI for advanced and automated operations with Spotify."""
     click.echo(click.style(ui.GREET, fg='magenta', bold=True))
 
@@ -60,7 +61,7 @@ def main(ctx, username):
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
 @ui.echo_feedback("Fetching albums...", "Albums fetched!")
-def albums(ctx, file):
+def albums(ctx: click.Context, file: TextIOWrapper) -> None:
     """Fetches albums from file or Spotify user library."""
     if file is not None:
         albums = json.load(file)
@@ -76,7 +77,7 @@ def albums(ctx, file):
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
 @ui.echo_feedback("Fetching artists...", "Artists fetched!")
-def artists(ctx, file):
+def artists(ctx: click.Context, file: TextIOWrapper) -> None:
     """Fetches artists from file or Spotify profile."""
     if file is not None:
         artists = json.load(file)
@@ -91,7 +92,7 @@ def artists(ctx, file):
 @click.option('--file', '-f', type=click.File('r'))
 @click.pass_context
 @ui.echo_feedback("Fetching tracks...", "Tracks fetched!")
-def tracks(ctx, file):
+def tracks(ctx: click.Context, file: TextIOWrapper) -> None:
     """Fetches tracks from file or Spotify user library."""
     if file is not None:
         tracks = json.load(file)
@@ -109,7 +110,7 @@ def tracks(ctx, file):
 @click.option('--weeks', '-w', type=click.IntRange(1))
 @click.pass_context
 @ui.echo_feedback("Fetching releases from Spotify...", "Releases fetched!")
-def releases(ctx, file, read_date, weeks):
+def releases(ctx: click.Context, file: TextIOWrapper, read_date: TextIOWrapper, weeks: int) -> None:
     """Fetches new releases from artists from last command."""
     if file is not None:
         new_releases = json.load(file)
@@ -118,7 +119,6 @@ def releases(ctx, file, read_date, weeks):
         # else prompts for a number of weeks
         if read_date is not None:
             date = io.read_date(read_date)
-            weeks = None
         else:
             date = None
             if weeks is None:
@@ -146,7 +146,7 @@ def releases(ctx, file, read_date, weeks):
 )
 @click.pass_context
 @ui.echo_feedback("Fetching top artists...", "Artists fetched!")
-def topartists(ctx, term):
+def topartists(ctx: click.Context, term: str) -> None:
     """Fetches user top artists from Spotify profile."""
     time_range = f'{term}_term'
     artists = operations.get_top_artists(ctx.obj['username'], time_range=time_range)
@@ -165,7 +165,7 @@ def topartists(ctx, term):
 )
 @click.pass_context
 @ui.echo_feedback("Fetching top tracks...", "Tracks fetched!")
-def toptracks(ctx, term):
+def toptracks(ctx: click.Context, term: str) -> None:
     """Fetches user top tracks from Spotify profile."""
     time_range = f'{term}_term'
     tracks = operations.get_top_tracks(ctx.obj['username'], time_range=time_range)
@@ -178,7 +178,7 @@ def toptracks(ctx, term):
 @click.option('--ask', '-a', is_flag=True, help='ask which albums to save')
 @click.pass_context
 @ui.echo_feedback("Saving releases to account...", "Releases saved!")
-def save(ctx, ask):
+def save(ctx: click.Context, ask: bool) -> None:
     """Saves albums from last command in the Spotify user library."""
     if ask:
         albums_to_save = []
@@ -197,7 +197,7 @@ def save(ctx, ask):
 
 @main.command()
 @click.pass_context
-def show(ctx):
+def show(ctx: click.Context) -> None:
     """Shows the content of context."""
     for key, parser in PARSERS.items():
         if key in ctx.obj:
@@ -210,7 +210,7 @@ def show(ctx):
 @click.argument('file', type=click.File('w'))
 @click.pass_context
 @ui.echo_feedback("Writing to file...", "Done!")
-def write(ctx, file):
+def write(ctx: click.Context, file: TextIOWrapper) -> None:
     """Writes results from last command to a file."""
     if file.name.split('.')[-1] == 'wiki':
         file.write(

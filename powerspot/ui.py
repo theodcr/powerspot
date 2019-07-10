@@ -3,6 +3,7 @@ Helpers for CLI appearence and UI.
 """
 
 from functools import update_wrapper
+from typing import Any, Callable
 
 import click
 
@@ -16,11 +17,11 @@ GREET = """
 """
 
 
-def echo_feedback(before, after):
+def echo_feedback(before: str, after: str) -> Callable:
     """Decorators to echo messages before and after calling a function."""
-    def pass_obj(function):
+    def pass_obj(function: Callable) -> Callable:
         @click.pass_context
-        def wrapper(ctx, *args, **kwargs):
+        def wrapper(ctx: click.Context, *args: Any, **kwargs: Any) -> None:
             click.echo(click.style(before, fg='cyan'))
             ctx.invoke(function, *args, **kwargs)
             click.echo(click.style(f"{after}\n", fg='blue', bold=True))

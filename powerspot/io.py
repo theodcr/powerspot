@@ -4,31 +4,33 @@ Input and output functions to store, parse and export Spotify data.
 
 import datetime
 import json
+from typing import Any, Dict, Iterable, Optional
+
 from tabulate import tabulate
 
 DATE_FORMAT = '%Y-%m-%d'
 
 
-def write_file(content, filename):
+def write_file(content: str, filename: str) -> None:
     """Writes the given content in a file."""
     with open(filename, 'w') as file_content:
         file_content.write(content)
 
 
-def read_json(filename):
+def read_json(filename: str) -> str:
     """Reads the content of a JSON file."""
     with open(filename, 'r') as file_content:
         content = json.load(file_content)
     return content
 
 
-def write_json(content, filename):
+def write_json(content: str, filename: str) -> None:
     """Writes the given content in a JSON file."""
     with open(filename, 'w') as file_content:
         file_content.write(json.dumps(content))
 
 
-def parse_artists(artists_json, print_date=True):
+def parse_artists(artists_json: Iterable[Dict[str, Any]], print_date: bool = True) -> str:
     """Parses artists from JSON format to a readable string.
     Optionally write the current date at beginning of string.
     """
@@ -39,7 +41,7 @@ def parse_artists(artists_json, print_date=True):
     return output
 
 
-def parse_albums(albums_json, print_date=True):
+def parse_albums(albums_json: Iterable[Dict[str, Any]], print_date: bool = True) -> str:
     """Parses albums from JSON format to a readable string.
     Optionally write the current date at beginning of string.
     """
@@ -52,7 +54,7 @@ def parse_albums(albums_json, print_date=True):
     return output
 
 
-def tabulate_albums(albums_json, print_date=True):
+def tabulate_albums(albums_json: Iterable[Dict[str, Any]], print_date: bool = True) -> str:
     """Parses albums from JSON format to a string table using tabulate.
     Optionally write the current date at beginning of string.
     """
@@ -65,7 +67,7 @@ def tabulate_albums(albums_json, print_date=True):
     return output
 
 
-def tabulate_tracks(tracks_json, print_date=True):
+def tabulate_tracks(tracks_json: Iterable[Dict[str, Any]], print_date: bool = True) -> str:
     """Parses tracks from JSON format to a string table using tabulate.
     Optionally write the current date at beginning of string.
     """
@@ -78,13 +80,13 @@ def tabulate_tracks(tracks_json, print_date=True):
     return output
 
 
-def output_date(print_date=True):
+def output_date(print_date: bool = True) -> str:
     if print_date:
         return f"%date {datetime.datetime.now().strftime(DATE_FORMAT)}\n"
     return ""
 
 
-def read_date(filename):
+def read_date(filename: str) -> Optional[datetime.datetime]:
     """Reads and returns the date metadata contained in the file.
     Returns None if date could not be found or read.
     """
@@ -100,3 +102,4 @@ def read_date(filename):
         print("Date could not be found")
     except ValueError:
         print("Date format is invalid")
+    return None
