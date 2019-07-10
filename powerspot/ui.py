@@ -19,12 +19,13 @@ GREET = """
 
 def echo_feedback(before: str, after: str) -> Callable:
     """Decorators to echo messages before and after calling a function."""
+
     def pass_obj(function: Callable) -> Callable:
         @click.pass_context
         def wrapper(ctx: click.Context, *args: Any, **kwargs: Any) -> None:
-            click.echo(click.style(before, fg='cyan'))
+            click.echo(click.style(before, fg="cyan"))
             ctx.invoke(function, *args, **kwargs)
-            click.echo(click.style(f"{after}\n", fg='blue', bold=True))
+            click.echo(click.style(f"{after}\n", fg="blue", bold=True))
 
         return update_wrapper(wrapper, function)
 
