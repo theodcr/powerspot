@@ -1,5 +1,3 @@
-from . import io
-from . import operations
-from . import ui
+from . import io, operations, ui
 
 __all__ = ['io', 'operations', 'ui']

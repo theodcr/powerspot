@@ -12,12 +12,11 @@ Click context can contain:
 
 import json
 import os
-from _io import TextIOWrapper
 
 import click
 
+from _io import TextIOWrapper
 from powerspot import io, operations, ui
-
 
 PARSERS = {
     'tracks': io.tabulate_tracks,

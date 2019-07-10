@@ -4,12 +4,12 @@ the user library
 """
 
 import datetime
-import click
 from typing import Any, Callable, Dict, List, Optional
 
+import click
 from spotipy import Spotify
-from spotipy.util import prompt_for_user_token
 from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.util import prompt_for_user_token
 
 
 def operation(function: Callable) -> Callable:
