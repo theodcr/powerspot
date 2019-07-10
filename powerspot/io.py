@@ -3,31 +3,11 @@ Input and output functions to store, parse and export Spotify data.
 """
 
 import datetime
-import json
 from typing import Any, Dict, Iterable, Optional
 
 from tabulate import tabulate
 
 DATE_FORMAT = "%Y-%m-%d"
-
-
-def write_file(content: str, filename: str) -> None:
-    """Writes the given content in a file."""
-    with open(filename, "w") as file_content:
-        file_content.write(content)
-
-
-def read_json(filename: str) -> str:
-    """Reads the content of a JSON file."""
-    with open(filename, "r") as file_content:
-        content = json.load(file_content)
-    return content
-
-
-def write_json(content: str, filename: str) -> None:
-    """Writes the given content in a JSON file."""
-    with open(filename, "w") as file_content:
-        file_content.write(json.dumps(content))
 
 
 def parse_artists(
