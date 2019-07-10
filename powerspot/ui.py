@@ -7,7 +7,7 @@ from typing import Any, Callable
 
 import click
 
-GREET = """
+GREET = r"""
     ____                          _____             __
    / __ \____ _      _____  _____/ ___/____  ____  / /_
   / /_/ / __ \ | /| / / _ \/ ___/\__ \/ __ \/ __ \/ __/
