@@ -4,6 +4,7 @@ the user library
 """
 
 import datetime
+from functools import wraps
 from typing import Any, Callable, Dict, List, Optional
 
 import click
@@ -15,6 +16,7 @@ from spotipy.util import prompt_for_user_token
 def operation(function: Callable) -> Callable:
     """Decorator for spotipy functions that don't need a token."""
 
+    @wraps(function)
     def wrapper(*args: Any, **kwargs: Any) -> Callable:
         credentials = SpotifyClientCredentials()
         sp = Spotify(client_credentials_manager=credentials)
@@ -27,6 +29,7 @@ def scope_operation(scope: str) -> Callable:
     """Decorator for spotipy functions that need a token in a given scope."""
 
     def real_decorator(function: Callable) -> Callable:
+        @wraps(function)
         def wrapper(username: str, *args: Any, **kwargs: Any) -> None:
             token = prompt_for_user_token(username, scope)
             if token:
