@@ -58,6 +58,36 @@ def get_album(sp: Spotify, album_id: str) -> Dict[str, Any]:
 
 
 @operation
+def get_artist(sp: Spotify, artist_id: str) -> Dict[str, Any]:
+    """Returns an artist given its ID or URI"""
+    return sp.artist(artist_id)
+
+
+@operation
+def get_track(sp: Spotify, track_id: str) -> Dict[str, Any]:
+    """Returns an track given its ID or URI"""
+    return sp.track(track_id)
+
+
+@operation
+def get_tracks(sp: Spotify, track_ids: List[str]) -> List[Dict[str, Any]]:
+    """Returns tracks given their ID or URI"""
+    return sp.tracks(track_ids)
+
+
+@operation
+def get_audio_features(sp: Spotify, track_ids: List[str]) -> List[Dict[str, Any]]:
+    """Returns audio features for tracks given their ID or URI"""
+    return sp.audio_features(track_ids)
+
+
+@operation
+def get_audio_analysis(sp: Spotify, track_id: str) -> Dict[str, Any]:
+    """Returns audio analysis for track given its ID or URI"""
+    return sp.audio_analysis(track_id)
+
+
+@operation
 def get_artist_albums(
     sp: Spotify,
     artist_id: str,
