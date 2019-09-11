@@ -4,6 +4,7 @@ the user library
 """
 
 import datetime
+from functools import wraps
 from typing import Any, Callable, Dict, List, Optional
 
 import click
@@ -15,6 +16,7 @@ from spotipy.util import prompt_for_user_token
 def operation(function: Callable) -> Callable:
     """Decorator for spotipy functions that don't need a token."""
 
+    @wraps(function)
     def wrapper(*args: Any, **kwargs: Any) -> Callable:
         credentials = SpotifyClientCredentials()
         sp = Spotify(client_credentials_manager=credentials)
@@ -27,6 +29,7 @@ def scope_operation(scope: str) -> Callable:
     """Decorator for spotipy functions that need a token in a given scope."""
 
     def real_decorator(function: Callable) -> Callable:
+        @wraps(function)
         def wrapper(username: str, *args: Any, **kwargs: Any) -> None:
             token = prompt_for_user_token(username, scope)
             if token:
@@ -55,6 +58,36 @@ def parse_release_date(date: str) -> datetime.datetime:
 def get_album(sp: Spotify, album_id: str) -> Dict[str, Any]:
     """Returns an album given its ID or URI"""
     return sp.album(album_id)
+
+
+@operation
+def get_artist(sp: Spotify, artist_id: str) -> Dict[str, Any]:
+    """Returns an artist given its ID or URI"""
+    return sp.artist(artist_id)
+
+
+@operation
+def get_track(sp: Spotify, track_id: str) -> Dict[str, Any]:
+    """Returns an track given its ID or URI"""
+    return sp.track(track_id)
+
+
+@operation
+def get_tracks(sp: Spotify, track_ids: List[str]) -> List[Dict[str, Any]]:
+    """Returns tracks given their ID or URI"""
+    return sp.tracks(track_ids)
+
+
+@operation
+def get_audio_features(sp: Spotify, track_ids: List[str]) -> List[Dict[str, Any]]:
+    """Returns audio features for tracks given their ID or URI"""
+    return sp.audio_features(track_ids)
+
+
+@operation
+def get_audio_analysis(sp: Spotify, track_id: str) -> Dict[str, Any]:
+    """Returns audio analysis for track given its ID or URI"""
+    return sp.audio_analysis(track_id)
 
 
 @operation
