@@ -25,11 +25,11 @@ PARSERS = {
 }
 
 
-def get_username() -> str:
+def get_username(directory: str = ".") -> str:
     """Gets or prompts the user for the username."""
     username = None
     # find the username in the cache
-    for filename in os.listdir("."):
+    for filename in os.listdir(directory):
         if filename[:6] == ".cache":
             if click.confirm(f"Use cached username '{filename[7:]}'?", default=True):
                 username = filename[7:]

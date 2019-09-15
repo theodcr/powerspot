@@ -99,7 +99,7 @@ def get_artist_albums(
     limit: int = 20,
 ) -> List[Dict[str, Any]]:
     """Returns the albums of an artist given its ID or URI"""
-    return sp.artist_albums(artist_id, album_type=album_type, country=country)
+    return sp.artist_albums(artist_id, album_type=album_type, country=country)["items"]
 
 
 @operation
