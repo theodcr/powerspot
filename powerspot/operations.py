@@ -219,3 +219,9 @@ def get_top_tracks(
     """Get user top tracks"""
     results = sp.current_user_top_tracks(limit=limit, time_range=time_range)["items"]
     return results
+
+
+@scope_operation("user-read-currently-playing")
+def get_playing_track(sp: Spotify) -> Dict[str, Any]:
+    """Get user's currently playing track"""
+    return sp.current_user_playing_track()
