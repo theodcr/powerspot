@@ -231,3 +231,33 @@ def get_top_tracks(
 def get_playing_track(sp: Spotify) -> Dict[str, Any]:
     """Get user's currently playing track"""
     return sp.current_user_playing_track()
+
+
+@scope_operation("playlist-read-private")
+def get_playlists(sp: Spotify) -> Dict[str, Any]:
+    """Get user's currently playing track"""
+    playlists = []  # type: List[Dict[str, Any]]
+    results = sp.current_user_playlists(limit=50)
+    playlists.extend(results["items"])
+    while results["next"]:
+        results = sp.next(results)
+        playlists.extend(results["items"])
+    return playlists
+
+
+@scope_operation("playlist-modify-private")
+def create_playlist(
+    sp: Spotify, user: str, name: str, public: bool, description: str = ""
+) -> Dict[str, Any]:
+    """Create a user playlist"""
+    res = sp.user_playlist_create(user, name, public=public, description=description)
+    return res
+
+
+@scope_operation("playlist-modify-private")
+def replace_playlist_tracks(
+    sp: Spotify, user: str, playlist_id: str, track_ids: List[str],
+) -> Dict[str, str]:
+    """Replace tracks of an existing playlist, using their URIs"""
+    res = sp.user_playlist_replace_tracks(user, playlist_id, track_ids)
+    return res
