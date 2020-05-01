@@ -5,6 +5,7 @@ the user library
 
 import datetime
 from functools import wraps
+from inspect import signature
 from typing import Any, Callable, Dict, List, Optional
 
 import click
@@ -26,7 +27,10 @@ def operation(function: Callable) -> Callable:
 
 
 def scope_operation(scope: str) -> Callable:
-    """Decorator for spotipy functions that need a token in a given scope."""
+    """Decorator for spotipy functions that need a token in a given scope.
+
+    Also set username in function parameters if present.
+    """
 
     def real_decorator(function: Callable) -> Callable:
         @wraps(function)
@@ -34,6 +38,8 @@ def scope_operation(scope: str) -> Callable:
             token = prompt_for_user_token(username, scope)
             if token:
                 sp = Spotify(auth=token)
+                if "user" in signature(function).parameters:
+                    return function(sp, *args, user=username, **kwargs)
                 return function(sp, *args, **kwargs)
             click.echo(
                 click.style(f"Can't get token for {username}", fg="red", bold=True)
