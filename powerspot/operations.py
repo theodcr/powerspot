@@ -234,8 +234,8 @@ def get_playing_track(sp: Spotify) -> Dict[str, Any]:
 
 
 @scope_operation("playlist-read-private")
-def get_playlists(sp: Spotify) -> Dict[str, Any]:
-    """Get user's currently playing track"""
+def get_playlists(sp: Spotify) -> List[Dict[str, Any]]:
+    """Get user's playlists"""
     playlists = []  # type: List[Dict[str, Any]]
     results = sp.current_user_playlists(limit=50)
     playlists.extend(results["items"])
@@ -243,6 +243,18 @@ def get_playlists(sp: Spotify) -> Dict[str, Any]:
         results = sp.next(results)
         playlists.extend(results["items"])
     return playlists
+
+
+@scope_operation("playlist-read-private")
+def get_playlist_tracks(sp: Spotify, playlist_id: str) -> List[Dict[str, Any]]:
+    """Get playlists tracks"""
+    tracks = []  # type: List[Dict[str, Any]]
+    results = sp.playlist_items(playlist_id, limit=100)
+    tracks.extend(results["items"])
+    while results["next"]:
+        results = sp.next(results)
+        tracks.extend(results["items"])
+    return tracks
 
 
 @scope_operation("playlist-modify-private")
@@ -256,7 +268,10 @@ def create_playlist(
 
 @scope_operation("playlist-modify-private")
 def replace_playlist_tracks(
-    sp: Spotify, user: str, playlist_id: str, track_ids: List[str],
+    sp: Spotify,
+    user: str,
+    playlist_id: str,
+    track_ids: List[str],
 ) -> Dict[str, str]:
     """Replace tracks of an existing playlist, using their URIs"""
     res = sp.user_playlist_replace_tracks(user, playlist_id, track_ids)
